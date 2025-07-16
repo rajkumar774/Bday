@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Futuristic Birthday Tribute</title>
+  <!-- Bootstrap 5 CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- AOS (Animate On Scroll) CSS -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <!-- Google Fonts for Futuristic Look -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #ffe5b4 0%, #000000 100%);
+      min-height: 100vh;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      overflow-x: hidden;
+    }
+    .glow {
+      color: #fff;
+      text-shadow: 0 0 8px #00fff7, 0 0 24px #ff00cc, 0 0 48px #00fff7;
+      font-family: 'Orbitron', 'Segoe UI', Arial, sans-serif;
+    }
+    .glass {
+      background: rgba(30, 30, 60, 0.55);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+      backdrop-filter: blur(8px);
+      border-radius: 1.5rem;
+      border: 1px solid rgba(255,255,255,0.18);
+    }
+    .timeline-zigzag {
+      position: relative;
+      margin: 0 auto;
+      padding: 2rem 0;
+      max-width: 900px;
+    }
+    .timeline-zigzag::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(180deg, #00fff7 0%, #ff00cc 100%);
+      transform: translateX(-50%);
+      border-radius: 2px;
+      z-index: 0;
+    }
+    .timeline-item {
+      position: relative;
+      width: 50%;
+      padding: 2rem 2rem 2rem 2rem;
+      box-sizing: border-box;
+      z-index: 1;
+    }
+    .timeline-item.left {
+      left: 0;
+      text-align: right;
+    }
+    .timeline-item.right {
+      left: 50%;
+      text-align: left;
+    }
+    .timeline-content {
+      display: inline-block;
+      background: rgba(20, 20, 40, 0.85);
+      border-radius: 1rem;
+      padding: 1.2rem 1.5rem;
+      box-shadow: 0 4px 24px #00fff755, 0 0 0 2px #ff00cc55;
+      color: #fff;
+      min-width: 220px;
+      max-width: 320px;
+      position: relative;
+    }
+    .timeline-img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid #00fff7;
+      margin-bottom: 0.7rem;
+      box-shadow: 0 0 16px #ff00cc99;
+    }
+    .timeline-item.left .timeline-content { float: right; }
+    .timeline-item.right .timeline-content { float: left; }
+    .timeline-item.left::after, .timeline-item.right::after {
+      content: '';
+      display: table;
+      clear: both;
+    }
+    @media (max-width: 900px) {
+      .timeline-item, .timeline-item.left, .timeline-item.right {
+        width: 100%;
+        left: 0;
+        text-align: left;
+      }
+      .timeline-zigzag::before { left: 24px; }
+      .timeline-content { margin-left: 48px; }
+    }
+    /* Animated typing effect */
+    .typing {
+      border-right: 3px solid #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      animation: typing 2.5s steps(30, end), blink-caret 0.7s step-end infinite;
+    }
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+    @keyframes blink-caret {
+      from, to { border-color: transparent }
+      50% { border-color: #fff; }
+    }
+    /* Floating emojis/particles */
+    .floating-emoji {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.85;
+      font-size: 2.2rem;
+      filter: drop-shadow(0 0 8px #ff00cc88);
+      animation: floatUp linear infinite;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(1) rotate(-10deg); opacity: 0.7; }
+      10% { opacity: 1; }
+      100% { transform: translateY(-110vh) scale(1.1) rotate(10deg); opacity: 0; }
+    }
+    /* Card Animations */
+    .animated-card {
+      transition: transform 0.4s cubic-bezier(.4,2,.6,1), box-shadow 0.3s;
+      box-shadow: 0 4px 24px #00fff755, 0 0 0 2px #ff00cc55;
+      border-radius: 1.2rem;
+      background: rgba(30, 30, 60, 0.7);
+      overflow: hidden;
+      cursor: pointer;
+      will-change: transform;
+    }
+    .animated-card:hover {
+      transform: scale(1.07) rotate(-2deg);
+      box-shadow: 0 8px 32px #ff00cc99, 0 0 0 6px #00fff799;
+    }
+    /* Flip Card Styles */
+    .flip-card {
+      background: transparent;
+      border-radius: 1.2rem;
+      box-shadow: 0 4px 24px #00fff799, 0 0 0 4px #ff00cc33;
+      perspective: 1200px;
+      width: 100%;
+      min-height: 14rem;
+      height: 100%;
+      cursor: pointer;
+      transition: box-shadow 0.2s;
+      will-change: transform;
+      position: relative;
+      overflow: visible;
+    }
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.7s cubic-bezier(.4,2,.6,1);
+      transform-style: preserve-3d;
+    }
+    .flip-card.flipped .flip-card-inner,
+    .flip-card:hover .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+    .flip-card-front, .flip-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      backface-visibility: hidden;
+      border-radius: 1.2rem;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #181818;
+      box-shadow: 0 2px 12px #00fff755, 0 0 0 2px #ff00cc55;
+    }
+    .flip-card-front img, .flip-card-back img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 1.2rem;
+    }
+    .flip-card-back {
+      transform: rotateY(180deg);
+      background: #222;
+    }
+    .flip-card:hover, .flip-card.flipped {
+      box-shadow: 0 8px 32px #ff00cc99, 0 0 0 6px #00fff799;
+    }
+    .counter {
+      font-size: 2.5rem;
+      font-family: 'Orbitron', 'Segoe UI', Arial, sans-serif;
+      color: #00fff7;
+      text-shadow: 0 0 8px #ff00cc, 0 0 24px #00fff7;
+    }
+    
+  </style>   
+</head>
+<body class="relative">
+  <!-- Bootstrap Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow-lg">
+    <div class="container-fluid">
+      <a class="navbar-brand glow" href="#hero">Birthday Tribute</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#hero">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#timeline">Life Journey</a></li>
+          <li class="nav-item"><a class="nav-link" href="#album">Album</a></li>
+          <li class="nav-item"><a class="nav-link" href="#milestones">Milestones</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Floating Emojis/Particles -->
+  <div id="floating-objects"></div>
+
+  <!-- Hero Section -->
+  <section id="hero" class="min-h-screen flex flex-col justify-center items-center text-center relative pt-32 pb-20">
+    <h1 class="glow text-5xl md:text-7xl font-bold mb-6 typing" id="headline">Happy 18th Birthday, Mahalakshmi!</h1>
+    <p class="text-xl md:text-2xl text-white/80 max-w-2xl mx-auto mb-8">Celebrating a journey of dreams, laughter, and milestones. Step into a world of memories and futuristic fun!</p>
+    <a href="#timeline" class="btn btn-lg btn-primary shadow-lg animate-bounce">Explore Journey ↓</a>
+  </section>
+
+  <!-- Life Journey Timeline (Zigzag) -->
+  <section id="timeline" class="py-16">
+    <h2 class="glow text-4xl text-center mb-12" data-aos="fade-up">Life Journey Timeline</h2>
+    <div class="timeline-zigzag">
+      <!-- Example timeline items, alternate left/right -->
+      <div class="timeline-item left" data-aos="fade-right">
+        <div class="timeline-content flex flex-col items-center">
+          <img src="1.jpg" class="timeline-img !w-40 !h-40 mb-2" alt="Age 1">
+          <div class="font-bold text-base text-white/90 mt-2"></div>
+        </div>
+      </div>
+      <div class="timeline-item right" data-aos="fade-left">
+        <div class="timeline-content flex flex-col items-center">
+          <img src="2.jpg" class="timeline-img !w-40 !h-40 mb-2" alt="Age 2">
+          <div class="font-bold text-base text-white/90 mt-2"></div>
+        </div>
+      </div>
+      <div class="timeline-item left" data-aos="fade-right">
+        <div class="timeline-content flex flex-col items-center">
+          <img src="3.jpg" class="timeline-img !w-40 !h-40 mb-2" alt="Age 3">
+          <div class="font-bold text-base text-white/90 mt-2"></div>
+        </div>
+      </div>
+      <div class="timeline-item right" data-aos="fade-left">
+        <div class="timeline-content flex flex-col items-center">
+          <img src="4.jpg" class="timeline-img !w-40 !h-40 mb-2" alt="Age 4">
+          <div class="font-bold text-base text-white/90 mt-2"></div>
+        </div>
+      </div>
+      <div class="timeline-item left" data-aos="fade-right">
+        <div class="timeline-content flex flex-col items-center">
+          <img src="5.jpg" class="timeline-img !w-40 !h-40 mb-2" alt="Age 5">
+          <div class="font-bold text-base text-white/90 mt-2"></div>
+        </div>
+      </div>
+      <div class="timeline-item right" data-aos="fade-left">
+        <div class="timeline-content flex flex-col items-center">
+          <img src="12.jpg" class="timeline-img !w-40 !h-40 mb-2" alt="Age 6">
+          <div class="font-bold text-base text-white/90 mt-2"></div>
+        </div>
+      </div>
+      <div class="timeline-item left" data-aos="fade-right">
+        <div class="timeline-content flex flex-col items-center">
+          <img src="6.jpg" class="timeline-img !w-40 !h-40 mb-2" alt="Age 5">
+          <div class="font-bold text-base text-white/90 mt-2"></div>
+        </div>
+      </div>
+      <div class="timeline-item right" data-aos="fade-left">
+        <div class="timeline-content flex flex-col items-center">
+          <img src="7.jpg" class="timeline-img !w-40 !h-40 mb-2" alt="Age 6">
+          <div class="font-bold text-base text-white/90 mt-2"></div>
+        </div>
+      </div><div class="timeline-item left" data-aos="fade-right">
+        <div class="timeline-content flex flex-col items-center">
+          <img src="8.jpg" class="timeline-img !w-40 !h-40 mb-2" alt="Age 5">
+          <div class="font-bold text-base text-white/90 mt-2"></div>
+        </div>
+      </div>
+      <div class="timeline-item right" data-aos="fade-left">
+        <div class="timeline-content flex flex-col items-center">
+          <img src="9.jpg" class="timeline-img !w-40 !h-40 mb-2" alt="Age 6">
+            <div class="font-bold text-base text-white/90 mt-2"></div>
+        </div>
+      </div><div class="timeline-item left" data-aos="fade-right">
+        <div class="timeline-content flex flex-col items-center">
+          <img src="13.jpg" class="timeline-img !w-40 !h-40 mb-2" alt="Age 5">
+          <div class="font-bold text-base text-white/90 mt-2"></div>
+        </div>
+      </div>
+      <div class="timeline-item right" data-aos="fade-left">
+        <div class="timeline-content flex flex-col items-center">
+          <img src="10.jpg" class="timeline-img !w-40 !h-40 mb-2" alt="Age 6">
+          <div class="font-bold text-base text-white/90 mt-2"></div>
+        </div>
+      
+      <!-- ... Add more ages up to 18 as needed ... -->
+    </div>
+  </section>
+
+  <!-- Animated Content Sections (Glassmorphism, Gradients, Shadows) -->
+  <section class="py-16 bg-gradient-to-r from-[#232526]/80 to-[#414345]/80">
+    <div class="container mx-auto grid md:grid-cols-3 gap-8">
+      <div class="glass p-8 shadow-xl" data-aos="fade-up">
+        <h3 class="glow text-2xl mb-3">🎉 Birthday Wishes & Dreams</h3>
+        <p class="text-white/80">From wishing for toys to hoping for lifelong happiness, each birthday candle carried a new dream into the future.</p>
+      </div>
+      <div class="glass p-8 shadow-xl" data-aos="fade-up" data-aos-delay="200">
+        <h3 class="glow text-2xl mb-3">🎂 Celebrations with Family & Friends</h3>
+        <p class="text-white/80">From surprise parties to midnight cakes, birthdays became unforgettable with the laughter of our closest ones.</p>
+      </div>
+      <div class="glass p-8 shadow-xl" data-aos="fade-up" data-aos-delay="400">
+        <h3 class="glow text-2xl mb-3">🎈 Birthday Milestones</h3>
+        <p class="text-white/80">From the very first birthday to turning eighteen, every year marked a new chapter full of love, growth, and memories.
+
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Animated Flip Card Album Section -->
+  <section id="album" class="py-16">
+    <div class="animated-card">
+    <h2 class="glow text-4xl text-center mb-12" data-aos="fade-up">Gallery Album</h2>
+    <div class="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-8">
+      <!-- 10 Flippable Cards -->
+      <div class="flip-card" data-aos="zoom-in" data-aos-delay="0">
+        <div class="flip-card-inner">
+          <div class="flip-card-front w-full h-56 flex items-center justify-center">
+            <img src="maha/1.jpg" class="w-full h-56 object-cover" alt="Album 1 Front">
+          </div>
+          <div class="flip-card-back w-full h-56 flex items-center justify-center">
+            <img src="maha/1a.jpg" class="w-full h-56 object-cover" alt="Album 1 Back">
+          </div>
+        </div>
+      </div>
+      <div class="flip-card" data-aos="zoom-in" data-aos-delay="100">
+        <div class="flip-card-inner">
+          <div class="flip-card-front w-full h-56 flex items-center justify-center">
+            <img src="maha/2.jpg" class="w-full h-56 object-cover" alt="Album 2 Front">
+          </div>
+          <div class="flip-card-back w-full h-56 flex items-center justify-center">
+            <img src="maha/2a.jpg" class="w-full h-56 object-cover" alt="Album 2 Back">
+          </div>
+        </div>
+      </div>
+      <div class="flip-card" data-aos="zoom-in" data-aos-delay="200">
+        <div class="flip-card-inner">
+          <div class="flip-card-front w-full h-56 flex items-center justify-center">
+            <img src="maha/3.jpg" class="w-full h-56 object-cover" alt="Album 3 Front">
+          </div>
+          <div class="flip-card-back w-full h-56 flex items-center justify-center">
+            <img src="maha/3a.jpg" class="w-full h-56 object-cover" alt="Album 3 Back">
+          </div>
+        </div>
+      </div>
+      <div class="flip-card" data-aos="zoom-in" data-aos-delay="300">
+        <div class="flip-card-inner">
+          <div class="flip-card-front w-full h-56 flex items-center justify-center">
+            <img src="maha/4.jpg" class="w-full h-56 object-cover" alt="Album 4 Front">
+          </div>
+          <div class="flip-card-back w-full h-56 flex items-center justify-center">
+            <img src="maha/4a.jpg" class="w-full h-56 object-cover" alt="Album 4 Back">
+          </div>
+        </div>
+      </div>
+      <div class="flip-card" data-aos="zoom-in" data-aos-delay="400">
+        <div class="flip-card-inner">
+          <div class="flip-card-front w-full h-56 flex items-center justify-center">
+            <img src="maha/5.jpg" class="w-full h-56 object-cover" alt="Album 5 Front">
+          </div>
+          <div class="flip-card-back w-full h-56 flex items-center justify-center">
+            <img src="maha/5a.jpg" class="w-full h-56 object-cover" alt="Album 5 Back">
+          </div>
+        </div>
+      </div>
+      <div class="flip-card" data-aos="zoom-in" data-aos-delay="500">
+        <div class="flip-card-inner">
+          <div class="flip-card-front w-full h-56 flex items-center justify-center">
+            <img src="maha/6.jpg" class="w-full h-56 object-cover" alt="Album 6 Front">
+          </div>
+          <div class="flip-card-back w-full h-56 flex items-center justify-center">
+            <img src="maha/6a.jpg" class="w-full h-56 object-cover" alt="Album 6 Back">
+          </div>
+        </div>
+      </div>
+      <div class="flip-card" data-aos="zoom-in" data-aos-delay="600">
+        <div class="flip-card-inner">
+          <div class="flip-card-front w-full h-56 flex items-center justify-center">
+            <img src="maha/7.jpg" class="w-full h-56 object-cover" alt="Album 7 Front">
+          </div>
+          <div class="flip-card-back w-full h-56 flex items-center justify-center">
+            <img src="maha/7a.jpg" class="w-full h-56 object-cover" alt="Album 7 Back">
+          </div>
+        </div>
+      </div>
+      <div class="flip-card" data-aos="zoom-in" data-aos-delay="700">
+        <div class="flip-card-inner">
+          <div class="flip-card-front w-full h-56 flex items-center justify-center">
+            <img src="maha/8.jpg" class="w-full h-56 object-cover" alt="Album 8 Front">
+          </div>
+          <div class="flip-card-back w-full h-56 flex items-center justify-center">
+              <img src="maha/8b.jpg" class="w-full h-56 object-cover" alt="Album 8 Back">
+          </div>
+        </div>
+      </div>
+      <div class="flip-card" data-aos="zoom-in" data-aos-delay="800">
+        <div class="flip-card-inner">
+          <div class="flip-card-front w-full h-56 flex items-center justify-center">
+            <img src="maha/9.jpg" class="w-full h-56 object-cover" alt="Album 9 Front">
+          </div>
+          <div class="flip-card-back w-full h-56 flex items-center justify-center">
+            <img src="maha/9a.jpg" class="w-full h-56 object-cover" alt="Album 9 Back">
+          </div>
+        </div>
+      </div>
+      <div class="flip-card" data-aos="zoom-in" data-aos-delay="900">
+        <div class="flip-card-inner">
+          <div class="flip-card-front w-full h-56 flex items-center justify-center">
+            <img src="maha/10.jpg" class="w-full h-56 object-cover" alt="Album 10 Front">
+          </div>
+          <div class="flip-card-back w-full h-56 flex items-center justify-center">
+            <img src="maha/10a.jpg" class="w-full h-56 object-cover" alt="Album 10 Back">
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <!-- Animated Counter Section -->
+ 
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- AOS JS -->
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <!-- Anime.js for floating emojis/particles -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <script>
+    // Initialize AOS
+    AOS.init({ once: true, duration: 1200 });
+
+    // Typing effect for headline (if not using CSS)
+    // Uncomment below for JS typing effect
+    // const headline = document.getElementById('headline');
+    // const text = headline.textContent;
+    // headline.textContent = '';
+    // let i = 0;
+    // function type() {
+    //   if (i < text.length) {
+    //     headline.textContent += text.charAt(i);
+    //     i++;
+    //     setTimeout(type, 60);
+    //   }
+    // }
+    // type();
+
+    // Floating Emojis/Particles
+    const emojis = ['🎈','🎉','🎂','🥳','🎊','🕯️','🎁','🖤','😁'];
+    for (let i = 0; i < 18; i++) {
+      const el = document.createElement('span');
+      el.className = 'floating-emoji';
+      el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      el.style.left = Math.random() * 95 + 'vw';
+      el.style.animationDuration = (6 + Math.random() * 8) + 's';
+      el.style.fontSize = (2 + Math.random() * 2) + 'rem';
+      el.style.top = (100 + Math.random() * 20) + 'vh';
+      document.getElementById('floating-objects').appendChild(el);
+    }
+
+    // Smooth scroll for navbar links
+    document.querySelectorAll('a.nav-link').forEach(link => {
+      link.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href.startsWith('#')) {
+          e.preventDefault();
+          document.querySelector(href).scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+
+    // Flip card animation on click
+    document.querySelectorAll('.flip-card').forEach(card => {
+      card.addEventListener('click', () => {
+        card.classList.toggle('flipped');
+      });
+    });
+
+    // Animated Counter
+    function animateCounter(el, target) {
+      let current = 0;
+      const increment = Math.ceil(target / 100);
+      function update() {
+        current += increment;
+        if (current > target) current = target;
+        el.textContent = current;
+        if (current < target) requestAnimationFrame(update);
+      }
+      update();
+    }
+    document.querySelectorAll('.counter').forEach(counter => {
+      const target = +counter.getAttribute('data-target');
+      AOS.refresh();
+      counter.textContent = '0';
+      let started = false;
+      function onScroll() {
+        const rect = counter.getBoundingClientRect();
+        if (!started && rect.top < window.innerHeight) {
+          started = true;
+          animateCounter(counter, target);
+          window.removeEventListener('scroll', onScroll);
+        }
+      }
+      window.addEventListener('scroll', onScroll);
+      onScroll();
+    });
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.flip-card').forEach(card => {
+        card.addEventListener('click', () => card.classList.toggle('flipped'));
+        card.addEventListener('mouseenter', () => {
+          if (window.innerWidth > 900) card.classList.add('flipped');
+        });
+        card.addEventListener('mouseleave', () => {
+          if (window.innerWidth > 900) card.classList.remove('flipped');
+        });
+      });
+    });
+  </script>
+ 
+</body>
+</html> 
+
+
